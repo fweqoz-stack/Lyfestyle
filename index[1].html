@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070707">
+<title>LOCK IN</title>
+<style>
+:root{--bg:#070707;--panel:#111;--panel2:#151515;--line:#252525;--muted:#858585;--text:#f7f7f7;--accent:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 50% -10%,#242424 0,#0c0c0c 28%,#070707 58%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+.app{max-width:520px;margin:auto;padding:22px 16px calc(100px + env(safe-area-inset-bottom))}
+.header{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 22px}
+.logo{font-size:22px;font-weight:950;letter-spacing:3px}
+.avatar{width:40px;height:40px;border:1px solid #333;border-radius:50%;display:grid;place-items:center;background:#151515;font-size:15px;font-weight:800}
+.greeting{margin-bottom:18px}.greeting small{color:var(--muted);font-size:13px}.greeting h1{margin:4px 0 0;font-size:28px;letter-spacing:-1px}
+.hero{position:relative;overflow:hidden;border:1px solid #292929;border-radius:28px;padding:24px;background:linear-gradient(145deg,#1a1a1a,#0d0d0d);box-shadow:0 18px 45px #0008}
+.hero:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-80px;top:-80px;background:#fff;opacity:.035}
+.heroTop{display:flex;justify-content:space-between;align-items:flex-start}.eyebrow{font-size:11px;color:#999;letter-spacing:1.8px;text-transform:uppercase;font-weight:700}
+.ovr{font-size:78px;line-height:.9;font-weight:950;letter-spacing:-5px;margin:8px 0}.rank{color:#aaa;font-size:13px}
+.ring{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#fff 68%,#292929 0);position:relative}
+.ring:after{content:"";position:absolute;inset:6px;background:#111;border-radius:50%}.ring span{position:relative;z-index:1;font-size:11px;font-weight:800}
+.progress{height:7px;background:#292929;border-radius:99px;overflow:hidden;margin-top:20px}.progress>div{height:100%;background:#fff;border-radius:99px;transition:.25s}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0 22px}.stat{background:#111;border:1px solid #222;border-radius:19px;padding:15px}.stat .label{color:#777;font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700}.stat .value{font-size:22px;font-weight:850;margin-top:5px}
+.title{display:flex;justify-content:space-between;align-items:center;margin:0 3px 10px}.title h2{font-size:16px;margin:0}.title span{font-size:11px;color:#777}
+.habit{display:flex;align-items:center;gap:12px;background:linear-gradient(145deg,#151515,#101010);border:1px solid #222;border-radius:19px;padding:14px;margin:8px 0;cursor:pointer;transition:.2s}
+.habit:active{transform:scale(.985)}.check{width:31px;height:31px;border:1.5px solid #444;border-radius:50%;display:grid;place-items:center;color:transparent;font-size:16px;font-weight:900;flex:none;transition:.2s}
+.habit.done{border-color:#333;background:#171717}.habit.done .check{background:#fff;color:#080808;border-color:#fff}.habit.done .name{text-decoration:line-through;color:#666}
+.name{font-size:14px;font-weight:750}.sub{font-size:11px;color:#666;margin-top:3px}.xp{margin-left:auto;color:#888;font-size:11px;font-weight:700}
+.card{background:#111;border:1px solid #222;border-radius:20px;padding:16px}.dailyRow{display:flex;justify-content:space-between;align-items:center}.dailyRow strong{font-size:13px}.mini{color:#777;font-size:11px}
+button{width:100%;border:1px solid #2b2b2b;background:#161616;color:#eee;border-radius:16px;padding:14px;margin-top:12px;font-weight:750;cursor:pointer}
+.nav{position:fixed;left:0;right:0;bottom:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:#090909dd;border-top:1px solid #202020;backdrop-filter:blur(18px);z-index:5}.navInner{max-width:520px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.navItem{text-align:center;color:#666;font-size:10px;font-weight:700;letter-spacing:.3px;padding:7px}.navIcon{font-size:17px;margin-bottom:3px}.navItem.active{color:#fff}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="header"><div class="logo">LOCK IN</div><div class="avatar">L</div></header>
+
+<div class="greeting"><small id="date"></small><h1>Stay locked in.</h1></div>
+
+<section class="hero">
+  <div class="heroTop">
+    <div><div class="eyebrow">Overall Rating</div><div class="ovr" id="ovr">68</div><div class="rank">Build discipline. Build yourself.</div></div>
+    <div class="ring" id="ring"><span>68%</span></div>
+  </div>
+  <div class="progress"><div id="ovrbar" style="width:68%"></div></div>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="label">Level</div><div class="value" id="level">7</div></div>
+  <div class="stat"><div class="label">XP</div><div class="value" id="xp">680</div></div>
+  <div class="stat"><div class="label">Streak</div><div class="value" id="streak">1 🔥</div></div>
+</div>
+
+<div class="title"><h2>Today's habits</h2><span id="count">0 / 4</span></div>
+<div id="habits">
+<div class="habit" data-xp="25"><div class="check">✓</div><div><div class="name">Wake up early</div><div class="sub">Start the day strong</div></div><div class="xp">+25 XP</div></div>
+<div class="habit" data-xp="30"><div class="check">✓</div><div><div class="name">Workout</div><div class="sub">Train your body</div></div><div class="xp">+30 XP</div></div>
+<div class="habit" data-xp="20"><div class="check">✓</div><div><div class="name">Study</div><div class="sub">Focus for at least 30 min</div></div><div class="xp">+20 XP</div></div>
+<div class="habit" data-xp="15"><div class="check">✓</div><div><div class="name">No distractions</div><div class="sub">Stay focused on your goals</div></div><div class="xp">+15 XP</div></div>
+</div>
+
+<div class="title" style="margin-top:22px"><h2>Daily progress</h2><span id="pct">0%</span></div>
+<div class="card"><div class="dailyRow"><span class="mini">Today's completion</span><strong id="progressText">0 / 4</strong></div><div class="progress"><div id="progressBar" style="width:0%"></div></div></div>
+<button id="reset">Reset today's habits</button>
+</div>
+
+<nav class="nav"><div class="navInner">
+<div class="navItem active"><div class="navIcon">⌂</div>HOME</div>
+<div class="navItem"><div class="navIcon">◎</div>GOALS</div>
+<div class="navItem"><div class="navIcon">▥</div>STATS</div>
+<div class="navItem"><div class="navIcon">○</div>PROFILE</div>
+</div></nav>
+
+<script>
+const key="lockin-state-v2";
+let state=JSON.parse(localStorage.getItem(key)||'{"xp":680,"ovr":68,"level":7,"streak":1,"done":[]}');
+const habits=[...document.querySelectorAll(".habit")];
+document.getElementById("date").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"});
+function save(){localStorage.setItem(key,JSON.stringify(state))}
+function render(){
+ habits.forEach((h,i)=>h.classList.toggle("done",state.done.includes(i)));
+ const n=state.done.length,p=Math.round(n/habits.length*100);
+ document.getElementById("xp").textContent=state.xp;
+ document.getElementById("level").textContent=state.level;
+ document.getElementById("streak").textContent=state.streak+" 🔥";
+ document.getElementById("ovr").textContent=state.ovr;
+ document.getElementById("ovrbar").style.width=state.ovr+"%";
+ document.getElementById("ring").style.background=`conic-gradient(#fff ${state.ovr}%,#292929 0)`;
+ document.querySelector("#ring span").textContent=state.ovr+"%";
+ document.getElementById("count").textContent=n+" / "+habits.length;
+ document.getElementById("progressText").textContent=n+" / "+habits.length;
+ document.getElementById("progressBar").style.width=p+"%";
+ document.getElementById("pct").textContent=p+"%";
+}
+habits.forEach((h,i)=>h.onclick=()=>{
+ const x=+h.dataset.xp;
+ if(state.done.includes(i)){state.done=state.done.filter(v=>v!==i);state.xp-=x;state.ovr=Math.max(1,state.ovr-2)}
+ else{state.done.push(i);state.xp+=x;state.ovr=Math.min(99,state.ovr+2)}
+ state.level=Math.max(1,Math.floor(state.xp/100));save();render();
+});
+document.getElementById("reset").onclick=()=>{state.done=[];save();render()};
+render();
+</script>
+</body>
+</html>
